@@ -28,6 +28,7 @@ deps/
 *.log
 *.db
 .uuid
+.HA_VERSION
 
 
 # Python
