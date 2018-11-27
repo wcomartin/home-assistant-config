@@ -1,0 +1,2 @@
+type: "custom:state-card-aftership-ll"
+entity: sensor.aftership_sensor

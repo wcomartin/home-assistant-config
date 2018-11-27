@@ -1,0 +1,13 @@
+resources:
+  - url: /local/js/state-attribute-element.js?v=0
+    type: js
+  - url: /local/js/text-element.js?v=0
+    type: js
+  - url: /local/custom_ui/state-card-aftership.js
+    type: js
+
+title: My Awesome Home
+
+views:
+  - !include lovelace-views/home.yaml
+  # - !include lovelace-views/media.yaml

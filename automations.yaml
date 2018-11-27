@@ -1,0 +1,37 @@
+- id: '1531632816230'
+  alias: Living Room Lamp Schedule ON
+  trigger:
+  - at: '6:00'
+    platform: time
+  - event: sunset
+    platform: sun
+  condition: []
+  action:
+  - data:
+      entity_id: switch.esp3
+    service: switch.turn_on
+- id: '1531632917569'
+  alias: Living Room Lamp Schedule OFF
+  trigger:
+  - at: '10:00:00'
+    platform: time
+  - at: '12:00:00'
+    platform: time
+  condition: []
+  action:
+  - data:
+      entity_id: switch.esp3
+    service: switch.turn_off
+
+- alias: "Samwiseg0 Recently Added"
+  trigger: 
+    - platform: webhook
+      webhook_id: "samwiseg0_recently_added"
+  # condition:
+  #   - condition: template
+  #     value_template: '{{ trigger.json.name == "Good Eats: Reloaded" }}'
+  action:
+    - service: mqtt.publish
+      data_template: 
+        payload: "{{ trigger.json.name }}"
+        topic: "samwiseg0_recently_added"

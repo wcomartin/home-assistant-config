@@ -1,0 +1,16 @@
+'1534687430902':
+  alias: Watch Chromecast
+  sequence:
+  - data:
+      entity_id: media_player.denon_avrs710w
+    service: media_player.turn_on
+  - data:
+      entity_id: media_player.denon_avrs710w
+      source: Chromecast
+    service: media_player.select_source
+  - condition: state
+    entity_id: switch.tv
+    state: 'off'
+  - data:
+      entity_id: switch.tv
+    service: switch.turn_on

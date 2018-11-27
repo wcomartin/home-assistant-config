@@ -1,0 +1,74 @@
+title: Home
+panel: true
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: vertical-stack
+        cards:
+
+          - type: horizontal-stack
+            cards:
+              - type: glance
+                title: Downstairs Lights
+                show_state: false
+                show_header_toggle: false
+                entities:
+                  - entity: light.13302632dc4f223424a1
+                    name: Office
+                    tap_action: toggle
+
+                  - entity: light.58601164bcddc20a69b5
+                    name: BHall
+                    tap_action: toggle
+
+                  - entity: group.entryway
+                    name: Entryway
+                    tap_action: toggle
+
+              - type: glance
+                title: Upstairs Lights
+                show_state: false
+                show_header_toggle: false
+                entities:
+                  - entity: light.esp1
+                    name: Living
+                    tap_action: toggle
+
+                  - entity: light.esp3
+                    name: Dinning
+                    tap_action: toggle
+
+          - type: horizontal-stack
+            cards:
+              - type: media-control
+                entity: media_player.kitchen_mini
+              - type: media-control
+                entity: media_player.family_room_speaker
+
+          - !include tautulli.yaml
+
+          - !include untappd.yaml
+
+
+      - type: vertical-stack
+        cards:
+          - type: glance
+            title: Who's Home
+            show_state: true
+            entities:
+              - device_tracker.william_comartin
+              - device_tracker.jilliancomartin_phone_wifi
+
+          - type: picture-entity
+            entity: camera.samuels_room
+            camera_image: camera.samuels_room
+          - type: picture-entity
+            entity: camera.norahs_room
+            camera_image: camera.norahs_room
+      - type: vertical-stack
+        cards:
+          - type: thermostat
+            entity: climate.upstairs
+          - type: weather-forecast
+            entity: weather.weather
+          - !include aftership.yaml

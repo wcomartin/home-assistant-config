@@ -1,0 +1,6 @@
+entryway:
+  name: Entryway
+  view: no
+  entities:
+    - light.36366654dc4f2235fa82
+    - light.586011645ccf7f7d7416

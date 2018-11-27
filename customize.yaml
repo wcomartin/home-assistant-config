@@ -1,0 +1,25 @@
+sensor.yr_symbol:
+  friendly_name: Weather
+
+zone.home:
+  latitude: !secret latitude
+  longitude: !secret longitude
+
+sensor.untappd_checked:
+  icon: mdi:check
+sensor.untappd_followings:
+  icon: mdi:account-group
+sensor.untappd_total_badges:
+  icon: mdi:star
+sensor.untappd_total_beers:
+  icon: mdi:beer
+
+group.entryway:
+  friendly_name: "Entryway"
+  icon: mdi:ceiling-light
+
+device_tracker.william_comartin:
+  friendly_name: William Comartin
+  entity_picture: https://secure.gravatar.com/avatar/0d07193ef7ae2b033a1ca9f24881b0bd?s=200
+device_tracker.jilliancomartin_phone_wifi:
+  entity_picture: https://scontent.fybz1-1.fna.fbcdn.net/v/t1.0-9/39265716_10160701873930058_4215929027191373824_n.jpg?_nc_cat=108&_nc_ht=scontent.fybz1-1.fna&oh=198dcd2778a2174129366964bfcdef85&oe=5C456439

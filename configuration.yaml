@@ -1,0 +1,316 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/Toronto
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+  themes: !include_dir_merge_named themes
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  base_url: !secret base_url
+  cors_allowed_origins:
+    - https://reformedreality.com
+    - http://reformedreality.com
+
+api:
+  api_password: !secret api_password
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+custom_updater:
+  track:
+    - components
+    - python_scripts
+  component_urls:
+    - https://raw.githubusercontent.com/pnbruckner/homeassistant-config/master/custom_components.json
+  python_script_urls:
+    - https://raw.githubusercontent.com/pnbruckner/homeassistant-config/master/python_scripts.json
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+weather:
+  - platform: darksky
+    api_key: !secret darksky
+    name: Weather
+
+
+sensor:
+  - platform: rtorrent
+    name: rTorrent
+    url: !secret rtorrent_url
+    monitored_variables:
+      - 'current_status'
+      - 'download_speed'
+      - 'upload_speed'
+
+  - platform: fastdotcom
+
+  - platform: tautulli
+    host: 192.168.1.10
+    port: 8181
+    api_key: !secret tautulli
+    monitored_conditions:
+      - full_title
+
+  - platform: lastfm
+    api_key: !secret lastfm
+    users:
+      - williamcomartin
+
+  - platform: sonarr
+    host: 192.168.1.10
+    api_key: !secret sonarr
+    days: 5
+
+  - platform: radarr
+    host: 192.168.1.10
+    api_key: !secret radarr
+    monitored_conditions:
+      - upcoming
+      - diskspace
+      - status
+    days: 14
+
+  - platform: untappd
+    username: Williamcomartin
+    id: !secret untappd_id
+    secret: !secret untappd_secret
+
+  - platform: template
+    sensors:
+      untappd_badge:
+        value_template: "Recent Badge: {{ states.sensor.untappd_last_badge.attributes.badge }} (Level {{ states.sensor.untappd_last_badge.attributes.level }})"
+  
+  - platform: template
+    sensors:
+      untappd_beer:
+        value_template: "Recent Beer: {{ states.sensor.untappd_last_checkin.attributes.beer }} ({{ states.sensor.untappd_last_checkin.attributes.abv }})"
+  
+  - platform: template
+    sensors:
+      untappd_followings:
+        value_template: "{{ states.sensor.untappd_last_checkin.attributes.followings }}"
+  
+  - platform: template
+    sensors:
+      untappd_checked:
+        value_template: "{{ states.sensor.untappd_last_checkin.attributes.checkins }}"
+  
+  - platform: template
+    sensors:
+      untappd_total_beers:
+        value_template: "{{ states.sensor.untappd_last_checkin.attributes.total_beers }}"
+  
+  - platform: template
+    sensors:
+      untappd_total_badges:
+        value_template: "{{ states.sensor.untappd_last_checkin.attributes.total_badges }}"
+
+  - platform: template
+    sensors:
+      todd_power:
+        friendly_name: "Guest Bedroom TV"
+        entity_id: media_player.todd
+        value_template: >-
+          {% if is_state('media_player.todd', 'unavailable') or states.media_player.todd == None %}
+            OFF
+          {% else %}
+            ON
+          {% endif %}
+
+  - platform: template
+    sensors:
+      oracle_power:
+        friendly_name: "Master Bedroom TV"
+        entity_id: media_player.oracle
+        value_template: >-
+          {% if is_state('media_player.oracle', 'unavailable') or states.media_player.oracle == None %}
+            OFF
+          {% else %}
+            ON
+          {% endif %}
+
+  - platform: rest
+    name: AfterShip Sensor
+    resource: https://api.aftership.com/v4/trackings/
+    value_template: '{{ value_json["data"]["count"]}}'
+    json_attributes:
+      - data
+    headers:
+      aftership-api-key: !secret aftership
+      Content-Type: application/json
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+zone: !include zones.yaml
+
+camera:
+  - platform: foscam
+    ip: !secret camera_samuel_ip
+    username: !secret camera_samuel_username
+    password: !secret camera_samuel_password
+    name: Samuel's Room
+
+  - platform: foscam
+    ip: !secret camera_norah_ip
+    username: !secret camera_norah_username
+    password: !secret camera_norah_password
+    name: Norah's Room
+
+ifttt:
+    key: !secret ifttt_url
+
+mqtt:
+  broker: 192.168.1.10
+
+light:
+  - platform: mqtt
+    name: "ESP1"
+    state_topic: "esp1/state"
+    command_topic: "esp1/set"
+    payload_on: "1"
+    payload_off: "0"
+
+  - platform: mqtt
+    name: "ESP3"
+    state_topic: "esp3/state"
+    command_topic: "esp3/set"
+    payload_on: "0"
+    payload_off: "1"
+
+switch:
+  - platform: mqtt
+    name: "TV"
+    icon: "mdi:television"
+    state_topic: "IR1/TV/POWER/STATE"
+    command_topic: "IR1/TV/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    state_on: "ON"
+    state_off: "OFF"
+
+  - platform: mqtt
+    name: "Will's Netflix"
+    state_topic: "WILLIAMONEPLUS/NETFLIX/STATE"
+    command_topic: "WILLIAMONEPLUS/NETFLIX"
+    payload_on: "ON"
+    payload_off: "OFF"
+
+  - platform: mqtt
+    name: "Fireplace"
+    icon: "mdi:fire"
+    state_topic: "ESP2/stat/POWER"
+    command_topic: "ESP2/cmnd/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+
+google_assistant:
+  project_id: !secret google_project_id
+  api_key: !secret google_api_key
+  exposed_domains:
+    - switch
+    - light
+    - scripts
+  entity_config:
+    light.13302632dc4f223424a1:
+      expose: false
+    light.36366654dc4f2235fa82:
+      expose: false
+    light.586011645ccf7f7d7416:
+      expose: false
+    light.58601164bcddc20a69b5:
+      expose: false
+
+media_player:
+  - platform: gpmdp
+    host: 192.168.1.20
+
+nest:
+  client_id: !secret nest_id
+  client_secret: !secret nest_secret
+
+binary_sensor:
+  - platform: ping
+    name: William's Macbook Pro
+    host: 192.168.1.20
+
+device_tracker:
+  - platform: nmap_tracker
+    hosts: 192.168.1.1-255
+    home_interval: 10
+    new_device_defaults:
+      track_new_devices: False
+      
+  - platform: life360
+    username: !secret email_address
+    password: !secret life360_password
+
+tuya:
+  username: !secret phone_number
+  password: !secret tuya_password
+  country_code: 1
+
+influxdb:
+  host: 192.168.1.10
+  database: homeassistant
+
+cover:
+  - platform: myq
+    username: !secret email_address
+    password: !secret myq_password
+    type: chamberlain
+
+logger:
+  default: warning
+  logs:
+    homeassistant.components.mqtt: debug
